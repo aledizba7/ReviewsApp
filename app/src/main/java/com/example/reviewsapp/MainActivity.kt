@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.reviewsapp.ui.theme.ReviewsAppTheme
+import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
