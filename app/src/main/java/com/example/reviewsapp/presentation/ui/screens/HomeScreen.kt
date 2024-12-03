@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -42,10 +43,17 @@ fun HomeScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Implementar búsqueda */ }) {
+                    IconButton(onClick = {
+                        // Cerrar sesión
+                        navController.navigate("login") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true // Elimina las pantallas anteriores del stack
+                            }
+                        }
+                    }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Buscar",
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Cerrar sesión",
                             tint = Color.White
                         )
                     }
@@ -55,14 +63,12 @@ fun HomeScreen(
                 )
             )
         },
+        bottomBar = { BottomNavigationBar(navController) }, // Aquí agregamos el BottomNavigationBar
         containerColor = Color(0xFF121212)
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = innerPadding,
+            modifier = Modifier.fillMaxSize()
         ) {
             items(10) { index -> // Lista de películas
                 MovieItem(

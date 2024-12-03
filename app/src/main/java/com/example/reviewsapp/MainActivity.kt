@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -30,11 +29,13 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val sharedPref = SharedPref(LocalContext.current)
                 val isLogged = sharedPref.getIsLoggedSharedPref()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination =  if (isLogged) "home" else "login"
-                    ){
+                        startDestination = if (isLogged) "home" else "login"
+                    ) {
+                        // Composable para la pantalla de Login
                         composable(route = "login") {
                             LoginScreen(
                                 innerPadding = innerPadding,
@@ -42,6 +43,8 @@ class MainActivity : ComponentActivity() {
                                 sharedPref = sharedPref
                             )
                         }
+
+                        // Composable para la pantalla de Registro
                         composable(route = "register") {
                             RegisterScreen(
                                 innerPadding = innerPadding,
@@ -49,6 +52,8 @@ class MainActivity : ComponentActivity() {
                                 sharedPref = sharedPref
                             )
                         }
+
+                        // Composable para la pantalla principal (Home)
                         composable(route = "home") {
                             HomeScreen(
                                 innerPadding = innerPadding,
@@ -56,10 +61,27 @@ class MainActivity : ComponentActivity() {
                                 sharedPref = sharedPref
                             )
                         }
+
+                        // Composable para la pantalla de "Todas Películas"
+                        composable("todasPeliculas") {
+                            // Aquí iría la pantalla para "Todas Películas"
+                            Text("Pantalla de Todas Películas")
+                        }
+
+                        // Composable para la pantalla de "Mis Reseñas"
+                        composable("misPeliculas") {
+                            // Aquí iría la pantalla para "Mis Reseñas"
+                            Text("Pantalla de Mis Reseñas")
+                        }
+
+                        // Composable para la pantalla de "Usuario"
+                        composable("usuario") {
+                            // Aquí iría la pantalla para "Usuario"
+                            Text("Pantalla de Usuario")
+                        }
                     }
                 }
             }
         }
     }
 }
-
