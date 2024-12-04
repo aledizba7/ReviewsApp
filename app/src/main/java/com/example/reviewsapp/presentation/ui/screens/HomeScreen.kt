@@ -36,6 +36,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.placeholder
 import com.example.reviewsapp.dtos.MoviesItem
 import com.example.reviewsapp.services.LoginService
 import com.example.reviewsapp.services.MovieService
@@ -173,26 +175,26 @@ fun HomeScreen(
                         if (searchText == it.title){
                             MovieItem(
                                 id = it.id,
-                                image = it.id,
+                                image = it.image_url,
                                 title = it.title,
                                 year = it.year,
                                 rating = it.rating
                             )
-//                            {
-//                               // navController.navigate("movieDetails/$it") // Navegar a detalles de la película
-//                            }
+                            {
+                                navController.navigate("movieDetails/$it") // Navegar a detalles de la película
+                            }
                         }
                     } else {
                         MovieItem(
                             id = it.id,
-                            image = it.id,
+                            image = it.image_url,
                             title = it.title,
                             year = it.year,
                             rating = it.rating
                         )
-//                        {
-//                            // navController.navigate("movieDetails/$it")  Navegar a detalles de la película
-//                        }
+                        {
+                             navController.navigate("movieDetails/$it")
+                        }
                     }
                 }
             }
@@ -204,14 +206,14 @@ fun HomeScreen(
 @Composable
 fun MovieItem(
     id: Int,
-    image: Int,
+    image: String,
     title: String,
     year: Int,
     rating: Double,
-//    onClick: (Int) -> Unit
+    onClick: (Int) -> Unit
 ) {
     Card(
-//        onClick = { onClick(id) },
+        onClick = { onClick(id) },
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
@@ -227,14 +229,16 @@ fun MovieItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-//            Image( // CAMBIAR POR UN ASYNC IMAGE
-//                painter = painterResource(id = image),
-//                contentDescription = "Poster de $title",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .size(120.dp)
-//                    .clip(RoundedCornerShape(12.dp))
-//            )
+            AsyncImage( // Por alguna razón no funciona las imagenes importadas aunque escribas la url sin la api, no sé porque sea.
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(image)
+                    .placeholder(R.drawable.poster_sample)
+                    .build(),
+                error = painterResource(R.drawable.poster_sample), //Si se ve este poster es que fallo.
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(120.dp).clip(RoundedCornerShape(12.dp)),
+                contentDescription = title)
             Spacer(modifier = Modifier.width(16.dp))
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -252,7 +256,7 @@ fun MovieItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = "Calificación: $rating/5",
+                    text = "Calificación: $rating/10",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFFE50914)
                 )

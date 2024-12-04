@@ -11,12 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.reviewsapp.presentation.ui.screens.LoginScreen
 import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
+import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 import com.example.reviewsapp.use_cases.SharedPref
 
@@ -60,6 +63,22 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 sharedPref = sharedPref
                             )
+                        }
+
+                        // Composable para la pantalla de detalles de una pelicula
+                        composable(route = "movieDetails/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.IntType
+                                    nullable = false
+                                })) {
+                            HomeScreen(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                sharedPref = sharedPref
+                            )
+                                val id = it.arguments?.getInt("id") ?: 0
+                                MovieDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
                         }
 
                         // Composable para la pantalla de "Todas Películas"
