@@ -179,17 +179,17 @@ fun MovieDetailScreen(id: Int, innerPaddingValues: PaddingValues,navController: 
                             )
                             Spacer(modifier = Modifier.height(24.dp))
 
-//                            Button(
-//                                onClick = onRateClick,
-//                                colors = ButtonDefaults.buttonColors(
-//                                    containerColor = Color(0xFFE50914)
-//                                )
-//                            ) {
-//                                Text(
-//                                    text = "Calificar",
-//                                    color = Color.White
-//                                )
-//                            }
+                            Button(
+                                onClick = {},
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFE50914)
+                                )
+                            ) {
+                                Text(
+                                    text = "Calificar",
+                                    color = Color.White
+                                )
+                            }
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
