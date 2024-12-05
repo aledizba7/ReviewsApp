@@ -21,6 +21,7 @@ import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
 import com.example.reviewsapp.presentation.ui.screens.MisPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
+import com.example.reviewsapp.presentation.ui.screens.ReviewDetailScreen
 import com.example.reviewsapp.presentation.ui.screens.TodasPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
@@ -75,11 +76,6 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.IntType
                                     nullable = false
                                 })) {
-                            HomeScreen(
-                                innerPadding = innerPadding,
-                                navController = navController,
-                                sharedPref = sharedPref
-                            )
                                 val id = it.arguments?.getInt("id") ?: 0
                                 MovieDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
                         }
@@ -87,15 +83,28 @@ class MainActivity : ComponentActivity() {
                         // Composable para la pantalla de "Todas Películas"
                         composable("todasPeliculas") {
                             TodasPeliculasScreen(
-                                navController = navController
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                sharedPref = sharedPref
                             )
                         }
 
                         // Composable para la pantalla de "Mis Reseñas"
                         composable("misPeliculas") {
                             MisPeliculasScreen(
-                                navController = navController
+                                navController = navController,
                             )
+                        }
+
+                        // Composable para la pantalla de detalle de Reseña
+                        composable("reviewDetail/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.IntType
+                                    nullable = false
+                                })) {
+                                val id = it.arguments?.getInt("id") ?: 0
+                                ReviewDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
                         }
 
                         // Composable para la pantalla de "Usuario"
