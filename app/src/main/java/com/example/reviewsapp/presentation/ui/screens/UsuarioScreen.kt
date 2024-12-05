@@ -1,5 +1,6 @@
 package com.example.reviewsapp.presentation.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -30,46 +31,53 @@ fun UsuarioScreen(navController: NavController, sharedPref: SharedPref) {
         }
     }
 
-    // Diseño de la pantalla
-    Column(
+    // Fondo oscuro con un Box
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .background(Color.DarkGray) // Color de fondo oscuro
     ) {
-        // Mostrar el correo registrado si está disponible
-        users?.let {
-            Text("Correo: ${it.email}", color = Color.White)
+        // Diseño de la pantalla
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Mostrar el correo registrado si está disponible
+            users?.let {
+                Text("Correo: ${it.email}", color = Color.White)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Botones para cambiar contraseña, usuario, correo y cerrar sesión
+            Button(onClick = { /* Acción para cambiar contraseña */ }) {
+                Text("Cambiar contraseña", color = Color.White)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(onClick = { /* Acción para cambiar usuario */ }) {
+                Text("Cambiar usuario", color = Color.White)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(onClick = { /* Acción para cambiar correo */ }) {
+                Text("Cambiar correo", color = Color.White)
+            }
             Spacer(modifier = Modifier.height(16.dp))
-        }
 
-        // Botones para cambiar contraseña, usuario, correo y cerrar sesión
-        Button(onClick = { /* Acción para cambiar contraseña */ }) {
-            Text("Cambiar contraseña", color = Color.White)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = { /* Acción para cambiar usuario */ }) {
-            Text("Cambiar usuario", color = Color.White)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = { /* Acción para cambiar correo */ }) {
-            Text("Cambiar correo", color = Color.White)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                navController.navigate("login") {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
+            Button(
+                onClick = {
+                    navController.navigate("login") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
                 }
+            ) {
+                Text("Cerrar sesión", color = Color.White)
             }
-        ) {
-            Text("Cerrar sesión", color = Color.White)
         }
     }
 }
