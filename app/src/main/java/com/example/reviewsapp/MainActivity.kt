@@ -102,7 +102,8 @@ class MainActivity : ComponentActivity() {
                         composable("usuario") {
                             UsuarioScreen(
                                 navController = navController,
-                                sharedPref = sharedPref)
+                                sharedPref = sharedPref,
+                                innerPadding = innerPadding)
                         }
                     }
                 }

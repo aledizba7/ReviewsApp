@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiService {
-    @GET("user/{id}")
+    @GET("users/{id}")
     suspend fun getUserById(@Path("id") userId: Int): User
 }

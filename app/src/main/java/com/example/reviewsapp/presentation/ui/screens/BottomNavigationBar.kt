@@ -19,7 +19,7 @@ data class BottomNavItem(
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        BottomNavItem("inicio", "Inicio", Icons.Filled.Home),
+        BottomNavItem("home", "Inicio", Icons.Filled.Home),
         BottomNavItem("todasPeliculas", "Todas", Icons.Filled.Movie),
         BottomNavItem("misPeliculas", "Mis Reseñas", Icons.Filled.Favorite),
         BottomNavItem("usuario", "Usuario", Icons.Filled.Person),
