@@ -20,6 +20,7 @@ import com.example.reviewsapp.presentation.ui.screens.LoginScreen
 import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
 import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
+import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 import com.example.reviewsapp.use_cases.SharedPref
 
@@ -95,8 +96,9 @@ class MainActivity : ComponentActivity() {
 
                         // Composable para la pantalla de "Usuario"
                         composable("usuario") {
-                            // Aquí iría la pantalla para "Usuario"
-                            Text("Pantalla de Usuario")
+                            UsuarioScreen(
+                                navController = navController,
+                                sharedPref = sharedPref)
                         }
                     }
                 }
