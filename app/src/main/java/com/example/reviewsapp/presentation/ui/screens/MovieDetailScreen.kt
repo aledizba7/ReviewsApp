@@ -129,7 +129,7 @@ fun MovieDetailScreen(id: Int, innerPaddingValues: PaddingValues,navController: 
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(350.dp)
+                                    .height(200.dp)
                                     .clip(RoundedCornerShape(8.dp)),
                                 contentDescription = movie.title)
 
@@ -180,7 +180,7 @@ fun MovieDetailScreen(id: Int, innerPaddingValues: PaddingValues,navController: 
                             Spacer(modifier = Modifier.height(24.dp))
 
                             Button(
-                                onClick = {},
+                                onClick = { navController.navigate("newReview/$id")},
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFE50914)
                                 )

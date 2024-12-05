@@ -142,7 +142,7 @@ fun RegisterScreen(
             }
             if(password != confirmPassword){
                 Text(
-                    text = "Las constraseñas no coinciden",
+                    text = "Las contraseñas no coinciden",
                     color = Color.Red,
                     modifier = Modifier.padding(top = 10.dp)
                 )

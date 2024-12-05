@@ -21,6 +21,7 @@ import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
 import com.example.reviewsapp.presentation.ui.screens.MisPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
+import com.example.reviewsapp.presentation.ui.screens.NewReviewScreen
 import com.example.reviewsapp.presentation.ui.screens.ReviewDetailScreen
 import com.example.reviewsapp.presentation.ui.screens.TodasPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
@@ -105,6 +106,22 @@ class MainActivity : ComponentActivity() {
                                 })) {
                                 val id = it.arguments?.getInt("id") ?: 0
                                 ReviewDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
+                        }
+
+                        // Composable para la pantalla de Registro
+                        composable(route = "newReview/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.IntType
+                                    nullable = false
+                                })) {
+                            val id = it.arguments?.getInt("id") ?: 0
+                            NewReviewScreen(
+                                id = id,
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                sharedPref = sharedPref,
+                            )
                         }
 
                         // Composable para la pantalla de "Usuario"
