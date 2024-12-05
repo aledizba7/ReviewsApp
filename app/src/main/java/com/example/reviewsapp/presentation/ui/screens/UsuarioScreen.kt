@@ -22,6 +22,7 @@ import com.example.reviewsapp.use_cases.SharedPref
 import kotlinx.coroutines.launch
 import com.example.reviewsapp.services.RetrofitInstance
 import com.example.reviewsapp.presentation.ui.theme.Purple80
+import com.example.reviewsapp.presentation.ui.theme.PurpleGrey40
 import com.example.reviewsapp.presentation.ui.theme.PurpleGrey80
 
 @Composable
@@ -90,12 +91,25 @@ fun UsuarioScreen(navController: NavController, sharedPref: SharedPref) {
                 } ?: run {
                     // Si no hay error, mostrar los datos del usuario
                     userEmail?.let {
-                        Text("Correo: $it", color = Purple80, style = MaterialTheme.typography.bodyLarge)
+                        Text("Correo: $it", color = PurpleGrey40, style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     userId?.let {
                         Text("ID: $it", color = PurpleGrey80, style = MaterialTheme.typography.bodyMedium)
                     }
+                }
+                // Botón de Cerrar sesión
+                Button(
+                    onClick = {
+                        // Navegar a la pantalla de inicio de sesión
+                        navController.navigate("login") {
+                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple80),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Cerrar sesión", color = Color.White)
                 }
             }
         }

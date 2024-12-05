@@ -20,6 +20,7 @@ import androidx.navigation.navArgument
 import com.example.reviewsapp.presentation.ui.screens.LoginScreen
 import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
+import com.example.reviewsapp.presentation.ui.screens.MisPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
 import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
@@ -92,7 +93,9 @@ class MainActivity : ComponentActivity() {
                         // Composable para la pantalla de "Mis Reseñas"
                         composable("misPeliculas") {
                             // Aquí iría la pantalla para "Mis Reseñas"
-                            Text("Pantalla de Mis Reseñas")
+                            MisPeliculasScreen(
+                                navController = navController
+                            )
                         }
 
                         // Composable para la pantalla de "Usuario"
