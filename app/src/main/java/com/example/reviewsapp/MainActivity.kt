@@ -19,7 +19,9 @@ import androidx.navigation.navArgument
 import com.example.reviewsapp.presentation.ui.screens.LoginScreen
 import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
+import com.example.reviewsapp.presentation.ui.screens.MisPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
+import com.example.reviewsapp.presentation.ui.screens.TodasPeliculasScreen
 import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 import com.example.reviewsapp.use_cases.SharedPref
@@ -84,14 +86,16 @@ class MainActivity : ComponentActivity() {
 
                         // Composable para la pantalla de "Todas Películas"
                         composable("todasPeliculas") {
-                            // Aquí iría la pantalla para "Todas Películas"
-                            Text("Pantalla de Todas Películas")
+                            TodasPeliculasScreen(
+                                navController = navController
+                            )
                         }
 
                         // Composable para la pantalla de "Mis Reseñas"
                         composable("misPeliculas") {
-                            // Aquí iría la pantalla para "Mis Reseñas"
-                            Text("Pantalla de Mis Reseñas")
+                            MisPeliculasScreen(
+                                navController = navController
+                            )
                         }
 
                         // Composable para la pantalla de "Usuario"
