@@ -1,0 +1,184 @@
+Index: app/src/main/java/com/example/reviewsapp/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.reviewsapp\r\n\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.navigation.NavType\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport androidx.navigation.compose.rememberNavController\r\nimport androidx.navigation.navArgument\r\nimport com.example.reviewsapp.presentation.ui.screens.LoginScreen\r\nimport com.example.reviewsapp.presentation.ui.screens.RegisterScreen\r\nimport com.example.reviewsapp.presentation.ui.screens.HomeScreen\r\nimport com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen\r\nimport com.example.reviewsapp.presentation.ui.screens.UsuarioScreen\r\nimport com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme\r\nimport com.example.reviewsapp.use_cases.SharedPref\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge()\r\n        setContent {\r\n            ReviewsAppTheme {\r\n                val navController = rememberNavController()\r\n                val sharedPref = SharedPref(LocalContext.current)\r\n                val isLogged = sharedPref.getIsLoggedSharedPref()\r\n\r\n                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->\r\n                    NavHost(\r\n                        navController = navController,\r\n                        startDestination = if (isLogged) \"home\" else \"login\"\r\n                    ) {\r\n                        // Composable para la pantalla de Login\r\n                        composable(route = \"login\") {\r\n                            LoginScreen(\r\n                                innerPadding = innerPadding,\r\n                                navController = navController,\r\n                                sharedPref = sharedPref\r\n                            )\r\n                        }\r\n\r\n                        // Composable para la pantalla de Registro\r\n                        composable(route = \"register\") {\r\n                            RegisterScreen(\r\n                                innerPadding = innerPadding,\r\n                                navController = navController,\r\n                                sharedPref = sharedPref\r\n                            )\r\n                        }\r\n\r\n                        // Composable para la pantalla principal (Home)\r\n                        composable(route = \"home\") {\r\n                            HomeScreen(\r\n                                innerPadding = innerPadding,\r\n                                navController = navController,\r\n                                sharedPref = sharedPref\r\n                            )\r\n                        }\r\n\r\n                        // Composable para la pantalla de detalles de una pelicula\r\n                        composable(route = \"movieDetails/{id}\",\r\n                            arguments = listOf(\r\n                                navArgument(\"id\") {\r\n                                    type = NavType.IntType\r\n                                    nullable = false\r\n                                })) {\r\n                            HomeScreen(\r\n                                innerPadding = innerPadding,\r\n                                navController = navController,\r\n                                sharedPref = sharedPref\r\n                            )\r\n                                val id = it.arguments?.getInt(\"id\") ?: 0\r\n                                MovieDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)\r\n                        }\r\n\r\n                        // Composable para la pantalla de \"Todas Películas\"\r\n                        composable(\"todasPeliculas\") {\r\n                            // Aquí iría la pantalla para \"Todas Películas\"\r\n                            Text(\"Pantalla de Todas Películas\")\r\n                        }\r\n\r\n                        // Composable para la pantalla de \"Mis Reseñas\"\r\n                        composable(\"misPeliculas\") {\r\n                            // Aquí iría la pantalla para \"Mis Reseñas\"\r\n                            Text(\"Pantalla de Mis Reseñas\")\r\n                        }\r\n\r\n                        // Composable para la pantalla de \"Usuario\"\r\n                        composable(\"usuario\") {\r\n                            UsuarioScreen(\r\n                                navController = navController,\r\n                                sharedPref = sharedPref\r\n                            )\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/reviewsapp/MainActivity.kt b/app/src/main/java/com/example/reviewsapp/MainActivity.kt
+--- a/app/src/main/java/com/example/reviewsapp/MainActivity.kt	(revision 40e0340bfdcdb3c1298bfbd5290580a049979460)
++++ b/app/src/main/java/com/example/reviewsapp/MainActivity.kt	(date 1733352767617)
+@@ -20,6 +20,7 @@
+ import com.example.reviewsapp.presentation.ui.screens.LoginScreen
+ import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
+ import com.example.reviewsapp.presentation.ui.screens.HomeScreen
++import com.example.reviewsapp.presentation.ui.screens.MisPeliculasScreen
+ import com.example.reviewsapp.presentation.ui.screens.MovieDetailScreen
+ import com.example.reviewsapp.presentation.ui.screens.UsuarioScreen
+ import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
+@@ -92,7 +93,9 @@
+                         // Composable para la pantalla de "Mis Reseñas"
+                         composable("misPeliculas") {
+                             // Aquí iría la pantalla para "Mis Reseñas"
+-                            Text("Pantalla de Mis Reseñas")
++                            MisPeliculasScreen(
++                                navController = navController
++                            )
+                         }
+ 
+                         // Composable para la pantalla de "Usuario"
+Index: app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.reviewsapp.presentation.ui.screens\r\n\r\nimport android.util.Log\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.filled.AccountCircle\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.ButtonDefaults\r\nimport androidx.compose.material3.CircularProgressIndicator\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.navigation.NavController\r\nimport com.example.reviewsapp.use_cases.SharedPref\r\nimport kotlinx.coroutines.launch\r\nimport com.example.reviewsapp.services.RetrofitInstance\r\nimport com.example.reviewsapp.presentation.ui.theme.Purple80\r\nimport com.example.reviewsapp.presentation.ui.theme.PurpleGrey80\r\n\r\n@Composable\r\nfun UsuarioScreen(navController: NavController, sharedPref: SharedPref) {\r\n    // Estados para los datos de usuario y para el estado de carga/error\r\n    var userEmail by remember { mutableStateOf<String?>(null) }\r\n    var userId by remember { mutableStateOf<Int?>(null) }\r\n    var isLoading by remember { mutableStateOf(true) }  // Indicador de carga\r\n    var errorMessage by remember { mutableStateOf<String?>(null) }  // Mensaje de error\r\n    val scope = rememberCoroutineScope()\r\n\r\n    // Obtener datos del usuario\r\n    LaunchedEffect(Unit) {\r\n        scope.launch {\r\n            try {\r\n                // Obtener los datos del usuario usando el ID almacenado en SharedPreferences\r\n                val userResponse = RetrofitInstance.api.getUserById(sharedPref.getUserIdSharedPref())\r\n\r\n                // Asignar los valores recibidos a las variables\r\n                userEmail = userResponse.email\r\n                userId = userResponse.id\r\n\r\n                // Actualizar el estado de carga\r\n                isLoading = false\r\n\r\n            } catch (e: Exception) {\r\n                Log.e(\"UsuarioScreen\", \"Error al obtener usuario: ${e.message}\")\r\n                errorMessage = e.message  // Guardar el mensaje de error\r\n                isLoading = false  // Finalizar carga incluso si hay error\r\n            }\r\n        }\r\n    }\r\n\r\n    // Diseño de la pantalla\r\n    Box(\r\n        modifier = Modifier\r\n            .fillMaxSize()\r\n            .padding(16.dp),\r\n        contentAlignment = Alignment.Center\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(24.dp),\r\n            horizontalAlignment = Alignment.CenterHorizontally,\r\n            verticalArrangement = Arrangement.Center\r\n        ) {\r\n            // Icono de usuario en el centro\r\n            Icon(\r\n                imageVector = Icons.Default.AccountCircle,\r\n                contentDescription = \"Icono de usuario\",\r\n                modifier = Modifier.size(120.dp),\r\n                tint = Color.Black\r\n            )\r\n\r\n            Spacer(modifier = Modifier.height(24.dp))\r\n\r\n            // Mostrar el estado de carga, datos de usuario o mensaje de error\r\n            if (isLoading) {\r\n                // Si está cargando, mostrar un indicador de carga\r\n                CircularProgressIndicator()\r\n            } else {\r\n                // Si hay un error, mostrar el mensaje de error\r\n                errorMessage?.let {\r\n                    Text(\"Error: $it\", color = Color.Red)  // Mostrar error en rojo\r\n                } ?: run {\r\n                    // Si no hay error, mostrar los datos del usuario\r\n                    userEmail?.let {\r\n                        Text(\"Correo: $it\", color = Purple80, style = MaterialTheme.typography.bodyLarge)\r\n                    }\r\n                    Spacer(modifier = Modifier.height(8.dp))\r\n                    userId?.let {\r\n                        Text(\"ID: $it\", color = PurpleGrey80, style = MaterialTheme.typography.bodyMedium)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt b/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt
+--- a/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt	(revision 40e0340bfdcdb3c1298bfbd5290580a049979460)
++++ b/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt	(date 1733352367397)
+@@ -22,6 +22,7 @@
+ import kotlinx.coroutines.launch
+ import com.example.reviewsapp.services.RetrofitInstance
+ import com.example.reviewsapp.presentation.ui.theme.Purple80
++import com.example.reviewsapp.presentation.ui.theme.PurpleGrey40
+ import com.example.reviewsapp.presentation.ui.theme.PurpleGrey80
+ 
+ @Composable
+@@ -90,13 +91,26 @@
+                 } ?: run {
+                     // Si no hay error, mostrar los datos del usuario
+                     userEmail?.let {
+-                        Text("Correo: $it", color = Purple80, style = MaterialTheme.typography.bodyLarge)
++                        Text("Correo: $it", color = PurpleGrey40, style = MaterialTheme.typography.bodyLarge)
+                     }
+                     Spacer(modifier = Modifier.height(8.dp))
+                     userId?.let {
+                         Text("ID: $it", color = PurpleGrey80, style = MaterialTheme.typography.bodyMedium)
+                     }
+                 }
++                // Botón de Cerrar sesión
++                Button(
++                    onClick = {
++                        // Navegar a la pantalla de inicio de sesión
++                        navController.navigate("login") {
++                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
++                        }
++                    },
++                    colors = ButtonDefaults.buttonColors(containerColor = Purple80),
++                    shape = RoundedCornerShape(12.dp)
++                ) {
++                    Text("Cerrar sesión", color = Color.White)
++                }
+             }
+         }
+     }
+Index: app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.reviewsapp.services\r\n\r\nimport retrofit2.Retrofit\r\nimport retrofit2.converter.gson.GsonConverterFactory\r\n\r\nobject RetrofitInstance {\r\n\r\n    private val retrofit by lazy {\r\n        Retrofit.Builder()\r\n            .baseUrl(\"http://127.0.0.1:8000\")\r\n            .addConverterFactory(GsonConverterFactory.create())\r\n            .build()\r\n    }\r\n\r\n    val api: ApiService by lazy {\r\n        retrofit.create(ApiService::class.java)  // Crea la instancia de ApiService\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt b/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt
+--- a/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt	(revision 40e0340bfdcdb3c1298bfbd5290580a049979460)
++++ b/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt	(date 1733351737898)
+@@ -7,7 +7,7 @@
+ 
+     private val retrofit by lazy {
+         Retrofit.Builder()
+-            .baseUrl("http://127.0.0.1:8000")
++            .baseUrl("http://10.0.2.2:8000/")
+             .addConverterFactory(GsonConverterFactory.create())
+             .build()
+     }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AndroidLayouts\">\r\n    <shared>\r\n      <config />\r\n    </shared>\r\n    <layouts>\r\n      <layout url=\"file://$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml\">\r\n        <config>\r\n          <theme>@style/Theme.ReviewsApp</theme>\r\n        </config>\r\n      </layout>\r\n    </layouts>\r\n  </component>\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"NONE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e3549e6f-2f13-4dbd-b431-1f04947c7a9f\" name=\"Changes\" comment=\"New design in HomeScreen\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ClangdSettings\">\r\n    <option name=\"formatViaClangd\" value=\"false\" />\r\n  </component>\r\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\\Users\\guiza\\.android\\avd\\Pixel_8_API_35.avd)]\" />\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <task path=\"$PROJECT_DIR$/app\">\r\n          <activation />\r\n        </task>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"ReviewsApp\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"ReviewsApp\" type=\"f1a62948:ProjectNode\" />\r\n                <item name=\"app\" type=\"2d1252cf:ModuleNode\" />\r\n              </path>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"ReviewsApp\" type=\"f1a62948:ProjectNode\" />\r\n                <item name=\"app\" type=\"2d1252cf:ModuleNode\" />\r\n                <item name=\"Tasks\" type=\"e4a08cd1:TasksNode\" />\r\n              </path>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"ReviewsApp\" type=\"f1a62948:ProjectNode\" />\r\n                <item name=\"app\" type=\"2d1252cf:ModuleNode\" />\r\n                <item name=\"Tasks\" type=\"e4a08cd1:TasksNode\" />\r\n                <item name=\"other\" type=\"c8890929:TasksNode$1\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Kotlin Data Class\" />\r\n        <option value=\"resourceFile\" />\r\n        <option value=\"Kotlin Class\" />\r\n        <option value=\"Kotlin Interface\" />\r\n        <option value=\"Kotlin File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;aledizba7&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/aledizba7/ReviewsApp.git&quot;,\r\n    &quot;accountId&quot;: &quot;1f13e34d-195d-40f7-83b3-daf3729efd5b&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2pUu44tVbC2ODujq3lv2j1KGj4d\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Android App.app.executor\": \"Debug\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.cidr.known.project.marker\": \"true\",\r\n    \"RunOnceActivity.readMode.enableVisualFormatting\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"cf.first.check.clang-format\": \"false\",\r\n    \"cidr.known.project.marker\": \"true\",\r\n    \"com.google.services.firebase.aqiPopupShown\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/guiza/AndroidStudioProjects/ReviewsApp-main/ReviewsApp-main\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"kotlin-gradle-user-dirs\": [\r\n      \"C:\\\\Users\\\\guiza\\\\.gradle\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\HUAWEI\\Desktop\\ReviewsApp\\ReviewsApp\\app\\src\\main\\res\\drawable\" />\r\n      <recent name=\"C:\\Users\\HUAWEI\\Desktop\\ReviewsApp\\ReviewsApp\\app\\src\\main\\res\\font\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\guiza\\AndroidStudioProjects\\ReviewsApp\\app\\src\\main\\java\\com\\example\\reviewsapp\\presentation\\ui\\navigation\" />\r\n      <recent name=\"C:\\Users\\HUAWEI\\Desktop\\ReviewsApp\\ReviewsApp\\app\\src\\main\\res\\font\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"app\" type=\"AndroidRunConfigurationType\" factoryName=\"Android App\">\r\n      <module name=\"ReviewsApp.app.main\" />\r\n      <option name=\"DEPLOY\" value=\"true\" />\r\n      <option name=\"DEPLOY_APK_FROM_BUNDLE\" value=\"false\" />\r\n      <option name=\"DEPLOY_AS_INSTANT\" value=\"false\" />\r\n      <option name=\"ARTIFACT_NAME\" value=\"\" />\r\n      <option name=\"PM_INSTALL_OPTIONS\" value=\"\" />\r\n      <option name=\"ALL_USERS\" value=\"false\" />\r\n      <option name=\"ALWAYS_INSTALL_WITH_PM\" value=\"false\" />\r\n      <option name=\"CLEAR_APP_STORAGE\" value=\"false\" />\r\n      <option name=\"DYNAMIC_FEATURES_DISABLED_LIST\" value=\"\" />\r\n      <option name=\"ACTIVITY_EXTRA_FLAGS\" value=\"\" />\r\n      <option name=\"MODE\" value=\"default_activity\" />\r\n      <option name=\"CLEAR_LOGCAT\" value=\"false\" />\r\n      <option name=\"SHOW_LOGCAT_AUTOMATICALLY\" value=\"false\" />\r\n      <option name=\"TARGET_SELECTION_MODE\" value=\"DEVICE_AND_SNAPSHOT_COMBO_BOX\" />\r\n      <option name=\"SELECTED_CLOUD_MATRIX_CONFIGURATION_ID\" value=\"-1\" />\r\n      <option name=\"SELECTED_CLOUD_MATRIX_PROJECT_ID\" value=\"\" />\r\n      <option name=\"DEBUGGER_TYPE\" value=\"Auto\" />\r\n      <Auto>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n        <option name=\"DEBUG_SANDBOX_SDK\" value=\"false\" />\r\n      </Auto>\r\n      <Hybrid>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n        <option name=\"DEBUG_SANDBOX_SDK\" value=\"false\" />\r\n      </Hybrid>\r\n      <Java>\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n        <option name=\"DEBUG_SANDBOX_SDK\" value=\"false\" />\r\n      </Java>\r\n      <Native>\r\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\r\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\r\n        <option name=\"WORKING_DIR\" value=\"\" />\r\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\r\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\r\n        <option name=\"ATTACH_ON_WAIT_FOR_DEBUGGER\" value=\"false\" />\r\n        <option name=\"DEBUG_SANDBOX_SDK\" value=\"false\" />\r\n      </Native>\r\n      <Profilers>\r\n        <option name=\"ADVANCED_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_CPU_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"STARTUP_CPU_PROFILING_CONFIGURATION_NAME\" value=\"Java/Kotlin Method Sample (legacy)\" />\r\n        <option name=\"STARTUP_NATIVE_MEMORY_PROFILING_ENABLED\" value=\"false\" />\r\n        <option name=\"NATIVE_MEMORY_SAMPLE_RATE_BYTES\" value=\"2048\" />\r\n      </Profilers>\r\n      <option name=\"DEEP_LINK\" value=\"\" />\r\n      <option name=\"ACTIVITY_CLASS\" value=\"\" />\r\n      <option name=\"SEARCH_ACTIVITY_IN_GLOBAL_SCOPE\" value=\"false\" />\r\n      <option name=\"SKIP_ACTIVITY_VALIDATION\" value=\"false\" />\r\n      <method v=\"2\">\r\n        <option name=\"Android.Gradle.BeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e3549e6f-2f13-4dbd-b431-1f04947c7a9f\" name=\"Changes\" comment=\"\" />\r\n      <created>1732832780408</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1732832780408</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Login functionality and navigation to HomeScreen done\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733046554503</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733046554503</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"New design in HomeScreen\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1733245147993</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1733245147993</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Login functionality and navigation to HomeScreen done\" />\r\n    <MESSAGE value=\"Correcting errors from previous commits due to lack of adding files\" />\r\n    <MESSAGE value=\"New design in HomeScreen\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"New design in HomeScreen\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 40e0340bfdcdb3c1298bfbd5290580a049979460)
++++ b/.idea/workspace.xml	(date 1733356969600)
+@@ -16,7 +16,19 @@
+     <option name="autoReloadType" value="NONE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e3549e6f-2f13-4dbd-b431-1f04947c7a9f" name="Changes" comment="New design in HomeScreen" />
++    <list default="true" id="e3549e6f-2f13-4dbd-b431-1f04947c7a9f" name="Changes" comment="UsuarioScreen">
++      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/MainActivity.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/presentation/ui/screens/UsuarioScreen.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/reviewsapp/services/RetrofitInstance.kt" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -92,37 +104,38 @@
+   <component name="GithubPullRequestsUISettings">{
+   &quot;selectedUrlAndAccountId&quot;: {
+     &quot;url&quot;: &quot;https://github.com/aledizba7/ReviewsApp.git&quot;,
+-    &quot;accountId&quot;: &quot;1f13e34d-195d-40f7-83b3-daf3729efd5b&quot;
++    &quot;accountId&quot;: &quot;32290d22-4ce8-4903-ad8a-a51c0a7595c9&quot;
+   }
+ }</component>
+-  <component name="ProjectColorInfo">{
+-  &quot;associatedIndex&quot;: 0
+-}</component>
++  <component name="ProjectColorInfo"><![CDATA[{
++  "associatedIndex": 5
++}]]></component>
+   <component name="ProjectId" id="2pUu44tVbC2ODujq3lv2j1KGj4d" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Android App.app.executor": "Debug",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.cidr.known.project.marker": "true",
+-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "cf.first.check.clang-format": "false",
+-    "cidr.known.project.marker": "true",
+-    "com.google.services.firebase.aqiPopupShown": "true",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "C:/Users/guiza/AndroidStudioProjects/ReviewsApp-main/ReviewsApp-main"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Android App.app.executor&quot;: &quot;Debug&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
++    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/guiza/AndroidStudioProjects/ReviewsApp-main/ReviewsApp-main&quot;
+   },
+-  "keyToStringList": {
+-    "kotlin-gradle-user-dirs": [
+-      "C:\\Users\\guiza\\.gradle"
++  &quot;keyToStringList&quot;: {
++    &quot;kotlin-gradle-user-dirs&quot;: [
++      &quot;C:\\Users\\guiza\\.gradle&quot;
+     ]
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="C:\Users\HUAWEI\Desktop\ReviewsApp\ReviewsApp\app\src\main\res\drawable" />
