@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
@@ -16,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.reviewsapp.dtos.MoviesItem
 import com.example.reviewsapp.presentation.ui.screens.LoginScreen
 import com.example.reviewsapp.presentation.ui.screens.RegisterScreen
 import com.example.reviewsapp.presentation.ui.screens.HomeScreen
@@ -37,6 +40,13 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val sharedPref = SharedPref(LocalContext.current)
                 val isLogged = sharedPref.getIsLoggedSharedPref()
+
+                // Lista de películas de ejemplo
+                val moviesList = remember { mutableStateListOf<MoviesItem>() }
+                // Función para eliminar película
+                val onDeleteMovie: (MoviesItem) -> Unit = { movie ->
+                    moviesList.remove(movie)
+                }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
@@ -77,8 +87,8 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.IntType
                                     nullable = false
                                 })) {
-                                val id = it.arguments?.getInt("id") ?: 0
-                                MovieDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
+                            val id = it.arguments?.getInt("id") ?: 0
+                            MovieDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
                         }
 
                         // Composable para la pantalla de "Todas Películas"
@@ -93,7 +103,9 @@ class MainActivity : ComponentActivity() {
                         // Composable para la pantalla de "Mis Reseñas"
                         composable("misPeliculas") {
                             MisPeliculasScreen(
+                                movies = moviesList,  // Pasamos la lista de películas
                                 navController = navController,
+                                onDeleteMovie = onDeleteMovie  // Pasamos la función de eliminación
                             )
                         }
 
@@ -104,8 +116,8 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.IntType
                                     nullable = false
                                 })) {
-                                val id = it.arguments?.getInt("id") ?: 0
-                                ReviewDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
+                            val id = it.arguments?.getInt("id") ?: 0
+                            ReviewDetailScreen(id = id, innerPaddingValues = innerPadding, navController = navController)
                         }
 
                         // Composable para la pantalla de Registro

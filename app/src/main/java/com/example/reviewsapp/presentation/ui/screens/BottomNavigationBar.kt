@@ -21,7 +21,7 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("home", "Inicio", Icons.Filled.Home),
         BottomNavItem("todasPeliculas", "Todas", Icons.Filled.Movie),
-        BottomNavItem("misPeliculas", "Mis Reseñas", Icons.Filled.Favorite),
+        BottomNavItem("misPeliculas", "Crear Reseña", Icons.Filled.Favorite),
         BottomNavItem("usuario", "Usuario", Icons.Filled.Person),
     )
 

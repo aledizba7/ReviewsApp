@@ -108,7 +108,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.ExitToApp,
                             contentDescription = "Cerrar sesión",
-                            tint = Color.White
+                            tint = Color.Gray
                         )
                     }
                 },
@@ -116,7 +116,10 @@ fun HomeScreen(
                     containerColor = Color(0xFF1B1B1B) // Barra superior oscura
                 )
             )
-            SearchBar(modifier = Modifier.width(308.dp).offset(x = 50.dp) //Search bar
+            SearchBar(modifier = Modifier
+                .width(310.dp)
+                .height(55.dp)
+                .offset(x = 50.dp) //Search bar
                 ,query = searchText,
                 onQueryChange = {
                     searchText = it
@@ -139,7 +142,9 @@ fun HomeScreen(
                     active = it
                 }) {
                 history.forEach { // Historial del search bar
-                    Row (modifier = Modifier.padding(all = 14.dp).clickable { searchText = it }){
+                    Row (modifier = Modifier
+                        .padding(all = 14.dp)
+                        .clickable { searchText = it }){
                         Icon(
                             imageVector = Icons.Default.History,
                             contentDescription = "History"
@@ -211,6 +216,8 @@ fun MovieItem(
     rating: Double,
     onClick: (Int) -> Unit
 ) {
+    Spacer(
+        modifier = Modifier.padding(10.dp))
     Card(
         onClick = { onClick(id) },
         shape = RoundedCornerShape(16.dp),
@@ -236,7 +243,9 @@ fun MovieItem(
                     .build(),
                 error = painterResource(R.drawable.poster_sample), //Si se ve este poster es que fallo.
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(120.dp).clip(RoundedCornerShape(12.dp)),
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(12.dp)),
                 contentDescription = title)
             Spacer(modifier = Modifier.width(16.dp))
             Column(

@@ -1,177 +1,186 @@
 package com.example.reviewsapp.presentation.ui.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.reviewsapp.R
 import com.example.reviewsapp.dtos.MoviesItem
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MisPeliculasScreen(navController: NavController) {
-    var savedMovies by remember { mutableStateOf<List<MoviesItem>>(emptyList()) }
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
+fun MisPeliculasScreen(
+    movies: List<MoviesItem>,
+    navController: NavController,
+    onDeleteMovie: (MoviesItem) -> Unit
+) {
+    var sortBy by remember { mutableStateOf("Año") }
 
-    LaunchedEffect(Unit) {
-        //savedMovies = getSavedMovies()
-    }
+    // Ordenar las películas según la opción seleccionada
+    val filteredMovies = movies.sortedWith(compareBy(
+        when (sortBy) {
+            "Año" -> { it: MoviesItem -> it.year }
+            "Género" -> { it: MoviesItem -> it.genre }
+            "Calificación" -> { it: MoviesItem -> it.rating }
+            else -> { it: MoviesItem -> it.year } // default ordering
+        }
+    ))
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        // Contenido de la pantalla de las películas del usuario
-        Text(
-            text = "Mis Películas y Reseñas",
-            color = Color.White
-        )
-    }
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Reseñas creadas",
+            Column {
+                CenterAlignedTopAppBar(
+                    title = {Text( //Revisar si en otros celulares se alcanza a ver el texto completo. (en el pequeño no)
+                        text = "Crear Reseña",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        // Cerrar sesión
-                        navController.navigate("login") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true // Elimina las pantallas anteriores del stack
+                    )},
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            // Cerrar sesión
+                            navController.navigate("login") {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true // Elimina las pantallas anteriores del stack
+                                }
                             }
-                        }
-                    } ) {
-                        Icon(
-                            imageVector = Icons.Default.ExitToApp,
-                            contentDescription = "Cerrar sesión",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFF1B1B1B) // Barra superior oscura
-                )
-            )},
-        bottomBar = { BottomNavigationBar(navController) }, // Aquí agregamos el BottomNavigationBar
-        containerColor = Color(0xFF121212)
-    ){innerPadding ->
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(contentPadding = innerPadding) {  }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2), // 2 columnas para la cartelera
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp) // Ajusta el padding según sea necesario
-            ) {
-                items(savedMovies) { movie ->
-                    // Card para cada película con diseño de cartelera
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp) // Ajusta la altura según sea necesario
-                            .padding(8.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.DarkGray // Fondo oscuro para la cartelera
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            // Imagen de la película
-                            AsyncImage(
-                                model = painterResource(R.drawable.poster_sample), // Reemplazar con la URL de la imagen
-                                contentDescription = movie.title,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(180.dp) // Ajusta la altura según sea necesario
+                        } ) {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Cerrar sesión",
+                                tint = Color.White
                             )
-
-                            // Título de la película
-                            Text(
-                                text = movie.title,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(8.dp)
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color(0xFF1B1B1B)
+                    )
+                )
+                // Ordenar por opciones
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                ) {
+                    DropdownMenu(
+                        expanded = false,
+                        onDismissRequest = {},
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        listOf("Año", "Género", "Calificación").forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(text = option) },
+                                onClick = { sortBy = option }
                             )
                         }
                     }
                 }
             }
+        },
+        bottomBar = { BottomNavigationBar(navController) },
+        content = {
+            LazyColumn(
+                modifier = Modifier.padding(it),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(filteredMovies) { movie ->
+                    MovieCard(movie = movie, onDeleteMovie = onDeleteMovie, navController = navController)
+                }
+            }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewMisPeliculasScreen() {
-    MisPeliculasScreen(rememberNavController())
-}
-
-data class Movie(
-    val title: String,
-    val posterUrl: String
-)
-
-suspend fun getSavedMovies(): List<Movie> {
-    // Reemplaza con tu lógica para obtener las películas de la API
-    return listOf(
-        Movie(title = "Película 1", posterUrl = "https://example.com/poster1.jpg"),
-        Movie(title = "Película 2", posterUrl = "https://example.com/poster2.jpg")
     )
 }
 
+@Composable
+fun MovieCard(
+    movie: MoviesItem,
+    onDeleteMovie: (MoviesItem) -> Unit,
+    navController: NavController
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1E1E1E)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(movie.image_url)
+                    .placeholder(R.drawable.poster_sample)
+                    .build(),
+                contentDescription = movie.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = movie.title,
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White
+            )
+            Text(
+                text = "(${movie.year})",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Light,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Género: ${movie.genre}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Text(
+                text = "Rating: ${movie.rating}/10",
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { navController.navigate("movieDetail/${movie.id}") },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
+                ) {
+                    Text(text = "Detalles", color = Color.White)
+                }
+                IconButton(onClick = { onDeleteMovie(movie) }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Eliminar película",
+                        tint = Color.Red
+                    )
+                }
+            }
+        }
+    }
+}
