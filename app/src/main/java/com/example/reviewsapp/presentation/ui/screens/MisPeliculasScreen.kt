@@ -1,5 +1,6 @@
 package com.example.reviewsapp.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +28,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.reviewsapp.R
+import com.example.reviewsapp.dtos.CreateMovie
+import com.example.reviewsapp.dtos.CreateReview
 import com.example.reviewsapp.dtos.MoviesItem
+import com.example.reviewsapp.services.MovieService
+import com.example.reviewsapp.services.ReviewService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,9 +48,10 @@ fun MisPeliculasScreen(
     var title by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
     var genre by remember { mutableStateOf("") }
-    var rating by remember { mutableStateOf("") }
+    var rating by remember { mutableFloatStateOf(0f) }
     var description by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.background(Color.Black),
@@ -90,7 +100,7 @@ fun MisPeliculasScreen(
                     label = { Text("Título de la película") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333), // Gris oscuro para los campos
+                        containerColor = Color.LightGray, // Gris oscuro para los campos
                         focusedIndicatorColor = Color.Red,
                         unfocusedIndicatorColor = Color.Gray,
                         focusedTextColor = Color.White
@@ -106,7 +116,7 @@ fun MisPeliculasScreen(
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333),
+                        containerColor = Color.LightGray,
                         focusedIndicatorColor = Color.Red,
                         unfocusedIndicatorColor = Color.Gray,
                         focusedTextColor = Color.White
@@ -121,7 +131,7 @@ fun MisPeliculasScreen(
                     label = { Text("Género") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333),
+                        containerColor = Color.LightGray,
                         focusedIndicatorColor = Color.Red,
                         unfocusedIndicatorColor = Color.Gray,
                         focusedTextColor = Color.White
@@ -130,19 +140,13 @@ fun MisPeliculasScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Campo para la calificación
-                TextField(
+                Slider(
                     value = rating,
                     onValueChange = { rating = it },
-                    label = { Text("Calificación") },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333),
-                        focusedIndicatorColor = Color.Red,
-                        unfocusedIndicatorColor = Color.Gray,
-                        focusedTextColor = Color.White
-                    )
+                    steps = 15,
+                    valueRange = 0f..10f
                 )
+                Text(text = rating.toString(), color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Campo para la descripción de la película
@@ -152,7 +156,7 @@ fun MisPeliculasScreen(
                     label = { Text("Descripción de la película") },
                     modifier = Modifier.fillMaxWidth().height(120.dp), // Ajusta el alto según sea necesario
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333),
+                        containerColor = Color.LightGray,
                         focusedIndicatorColor = Color.Red,
                         unfocusedIndicatorColor = Color.Gray,
                         focusedTextColor = Color.White
@@ -168,7 +172,7 @@ fun MisPeliculasScreen(
                     label = { Text("URL de la imagen") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFF333333),
+                        containerColor = Color.LightGray,
                         focusedIndicatorColor = Color.Red,
                         unfocusedIndicatorColor = Color.Gray,
                         focusedTextColor = Color.White
@@ -179,17 +183,23 @@ fun MisPeliculasScreen(
                 // Botón para crear la película
                 Button(
                     onClick = {
-                        // Convertimos los campos a los tipos correctos para crear un MoviesItem
-                        val newMovie = MoviesItem(
-                            id = 0,  // Genera un ID automáticamente o maneja esto según tu lógica
-                            title = title,
-                            year = year.toIntOrNull() ?: 0,  // Convierte el año a entero (0 si no es válido)
-                            genre = genre,
-                            rating = rating.toDoubleOrNull() ?: 0.0,  // Convierte la calificación a Double (0.0 si no es válido)
-                            description = description,
-                            image_url = imageUrl
-                        )
-                        onCreateMovie(newMovie)  // Llama a la función para crear la película
+                        scope.launch(Dispatchers.IO) {
+                            try {
+                                val movieService = Retrofit.Builder()
+                                    .baseUrl("http://10.0.2.2:8000/")
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build()
+                                    .create(MovieService::class.java)
+                                val movie = CreateMovie( title = title, year = year.toInt(), genre = genre, rating = rating, image_url = imageUrl, description = description)
+                                val response = movieService.createMovie(movie)
+                                Log.i("RegisterScreenAPI",response.toString())
+                                navController.navigate("home")
+                            }catch (e:Exception) { // Por ahora solo da ERROR.
+                                val movie = MoviesItem(id = 0, title = "", year = 0, genre = "", rating = 0.0, image_url = "", description = "")
+                                Log.i("API_ERROR",e.toString())
+                            }
+
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))

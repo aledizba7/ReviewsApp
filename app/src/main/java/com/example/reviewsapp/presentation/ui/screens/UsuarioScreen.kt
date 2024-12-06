@@ -122,7 +122,7 @@ fun UsuarioScreen(navController: NavController, sharedPref: SharedPref, innerPad
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "Icono de usuario",
                         modifier = Modifier.size(150.dp),
-                        tint = Purple80
+                        tint = Color.White
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
