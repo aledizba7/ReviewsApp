@@ -35,9 +35,8 @@ import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.placeholder
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.reviewsapp.dtos.MoviesItem
 import com.example.reviewsapp.services.LoginService
 import com.example.reviewsapp.services.MovieService
@@ -117,7 +116,7 @@ fun HomeScreen(
                     containerColor = Color(0xFF1B1B1B) // Barra superior oscura
                 )
             )
-            SearchBar(modifier = Modifier.width(300.dp).offset(x = 50.dp) //Search bar
+            SearchBar(modifier = Modifier.width(308.dp).offset(x = 50.dp) //Search bar
                 ,query = searchText,
                 onQueryChange = {
                     searchText = it

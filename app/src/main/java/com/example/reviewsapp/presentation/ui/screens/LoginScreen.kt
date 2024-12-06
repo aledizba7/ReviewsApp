@@ -18,10 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.reviewsapp.R
 import com.example.reviewsapp.services.LoginService
 import com.example.reviewsapp.dtos.AuthDto
+import com.example.reviewsapp.presentation.ui.theme.Purple80
 import com.example.reviewsapp.use_cases.SharedPref
 import com.example.reviewsapp.presentation.ui.theme.ReviewsAppTheme
 import com.example.reviewsapp.presentation.ui.utils.Lock
@@ -77,7 +80,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE3F2FD)),
+            .background(Color(0xFF121212)),
         contentAlignment = Alignment.Center
     ){
         Column(
@@ -151,7 +154,8 @@ fun LoginScreen(
                             }
                         }
                     }
-                }, modifier = Modifier
+                },
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
@@ -160,7 +164,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = "Crear una cuenta",
-                color = Color.Gray,
+                color = Color.Red,
                 modifier = Modifier.clickable {
                     navController.navigate("register")
                 }

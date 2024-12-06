@@ -42,9 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.placeholder
 import com.example.reviewsapp.R
 import com.example.reviewsapp.dtos.CreateReview
 import com.example.reviewsapp.dtos.MoviesItem

@@ -150,7 +150,7 @@ fun UsuarioScreen(navController: NavController, sharedPref: SharedPref, innerPad
                                         popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Purple80),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
