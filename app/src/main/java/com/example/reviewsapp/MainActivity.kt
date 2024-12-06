@@ -47,6 +47,10 @@ class MainActivity : ComponentActivity() {
                 val onDeleteMovie: (MoviesItem) -> Unit = { movie ->
                     moviesList.remove(movie)
                 }
+                // Agrega película
+                val onCreateMovie: (MoviesItem) -> Unit = { newMovie ->
+                    moviesList.add(newMovie)  // Agregar película a la lista
+                }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
@@ -103,9 +107,8 @@ class MainActivity : ComponentActivity() {
                         // Composable para la pantalla de "Mis Reseñas"
                         composable("misPeliculas") {
                             MisPeliculasScreen(
-                                movies = moviesList,  // Pasamos la lista de películas
-                                navController = navController,
-                                onDeleteMovie = onDeleteMovie  // Pasamos la función de eliminación
+                                onCreateMovie = onCreateMovie,
+                                navController = navController
                             )
                         }
 

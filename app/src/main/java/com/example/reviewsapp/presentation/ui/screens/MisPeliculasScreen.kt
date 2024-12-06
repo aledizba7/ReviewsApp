@@ -1,10 +1,12 @@
 package com.example.reviewsapp.presentation.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
@@ -18,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,157 +33,170 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MisPeliculasScreen(
-    movies: List<MoviesItem>,
     navController: NavController,
-    onDeleteMovie: (MoviesItem) -> Unit
+    onCreateMovie: (MoviesItem) -> Unit
 ) {
-    var sortBy by remember { mutableStateOf("Año") }
-
-    // Ordenar las películas según la opción seleccionada
-    val filteredMovies = movies.sortedWith(compareBy(
-        when (sortBy) {
-            "Año" -> { it: MoviesItem -> it.year }
-            "Género" -> { it: MoviesItem -> it.genre }
-            "Calificación" -> { it: MoviesItem -> it.rating }
-            else -> { it: MoviesItem -> it.year } // default ordering
-        }
-    ))
+    var title by remember { mutableStateOf("") }
+    var year by remember { mutableStateOf("") }
+    var genre by remember { mutableStateOf("") }
+    var rating by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
 
     Scaffold(
+        modifier = Modifier.background(Color.Black),
         topBar = {
-            Column {
-                CenterAlignedTopAppBar(
-                    title = {Text( //Revisar si en otros celulares se alcanza a ver el texto completo. (en el pequeño no)
-                        text = "Crear Reseña",
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Crear Película",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White
-                    )},
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            // Cerrar sesión
-                            navController.navigate("login") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true // Elimina las pantallas anteriores del stack
-                                }
-                            }
-                        } ) {
-                            Icon(
-                                imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Cerrar sesión",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFF1B1B1B)
                     )
-                )
-                // Ordenar por opciones
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                ) {
-                    DropdownMenu(
-                        expanded = false,
-                        onDismissRequest = {},
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        listOf("Año", "Género", "Calificación").forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(text = option) },
-                                onClick = { sortBy = option }
-                            )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        // Cerrar sesión
+                        navController.navigate("login") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true // Elimina las pantallas anteriores del stack
+                            }
                         }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Cerrar sesión",
+                            tint = Color.White
+                        )
                     }
-                }
-            }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF1B1B1B)
+                )
+            )
         },
         bottomBar = { BottomNavigationBar(navController) },
-        content = {
-            LazyColumn(
-                modifier = Modifier.padding(it),
-                contentPadding = PaddingValues(16.dp)
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
             ) {
-                items(filteredMovies) { movie ->
-                    MovieCard(movie = movie, onDeleteMovie = onDeleteMovie, navController = navController)
+                // Campo para el título
+                TextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Título de la película") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333), // Gris oscuro para los campos
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para el año
+                TextField(
+                    value = year,
+                    onValueChange = { year = it },
+                    label = { Text("Año") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333),
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para el género
+                TextField(
+                    value = genre,
+                    onValueChange = { genre = it },
+                    label = { Text("Género") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333),
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para la calificación
+                TextField(
+                    value = rating,
+                    onValueChange = { rating = it },
+                    label = { Text("Calificación") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333),
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para la descripción de la película
+                TextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Descripción de la película") },
+                    modifier = Modifier.fillMaxWidth().height(120.dp), // Ajusta el alto según sea necesario
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333),
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    ),
+                    maxLines = 5
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para la URL de la imagen
+                TextField(
+                    value = imageUrl,
+                    onValueChange = { imageUrl = it },
+                    label = { Text("URL de la imagen") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color(0xFF333333),
+                        focusedIndicatorColor = Color.Red,
+                        unfocusedIndicatorColor = Color.Gray,
+                        focusedTextColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Botón para crear la película
+                Button(
+                    onClick = {
+                        // Convertimos los campos a los tipos correctos para crear un MoviesItem
+                        val newMovie = MoviesItem(
+                            id = 0,  // Genera un ID automáticamente o maneja esto según tu lógica
+                            title = title,
+                            year = year.toIntOrNull() ?: 0,  // Convierte el año a entero (0 si no es válido)
+                            genre = genre,
+                            rating = rating.toDoubleOrNull() ?: 0.0,  // Convierte la calificación a Double (0.0 si no es válido)
+                            description = description,
+                            image_url = imageUrl
+                        )
+                        onCreateMovie(newMovie)  // Llama a la función para crear la película
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
+                ) {
+                    Text(text = "Crear Película", color = Color.White)
                 }
             }
         }
     )
-}
-
-@Composable
-fun MovieCard(
-    movie: MoviesItem,
-    onDeleteMovie: (MoviesItem) -> Unit,
-    navController: NavController
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1E1E1E)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(movie.image_url)
-                    .placeholder(R.drawable.poster_sample)
-                    .build(),
-                contentDescription = movie.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = movie.title,
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White
-            )
-            Text(
-                text = "(${movie.year})",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Light,
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Género: ${movie.genre}",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-            Text(
-                text = "Rating: ${movie.rating}/10",
-                fontSize = 14.sp,
-                color = Color.Red
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = { navController.navigate("movieDetail/${movie.id}") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
-                ) {
-                    Text(text = "Detalles", color = Color.White)
-                }
-                IconButton(onClick = { onDeleteMovie(movie) }) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Eliminar película",
-                        tint = Color.Red
-                    )
-                }
-            }
-        }
-    }
 }

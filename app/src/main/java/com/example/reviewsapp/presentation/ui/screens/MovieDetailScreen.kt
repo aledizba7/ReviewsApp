@@ -185,7 +185,7 @@ fun MovieDetailScreen(id: Int, innerPaddingValues: PaddingValues,navController: 
                                 )
                             ) {
                                 Text(
-                                    text = "Calificar",
+                                    text = "Crear Reseña",
                                     color = Color.White
                                 )
                             }
